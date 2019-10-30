@@ -40,8 +40,10 @@ server.interceptors.response.use(
         return response.data;
       case "Unauthorized":
         // 未登录操作
+        console.error(response.data.message);
         break;
       case "ServiceError":
+        console.error(response.data.message);
         return response.data;
       default:
         return response.data;

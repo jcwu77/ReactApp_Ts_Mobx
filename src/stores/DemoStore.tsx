@@ -1,10 +1,10 @@
-import { observable, action, reaction, computed } from "mobx";
+import { observable, action, reaction, computed, runInAction } from "mobx";
 import { testApi } from "../api/demo";
 
 class DemoStore {
   @observable count: number = 0;
-  @observable token: string = "aeasd";
-  @observable resData: object = {};
+  @observable token: string = "";
+  @observable resData: ResponseData = {};
   @observable pending: boolean = true;
 
   @computed get total() {
@@ -26,11 +26,15 @@ class DemoStore {
 
   @action getUserInfo = async () => {
     try {
-      const res: any = await testApi(); // 用 yield 代替 await
-      this.resData = res.data;
-      this.pending = false;
+      const res: ResponseData = await testApi(); // 用 yield 代替 await
+      runInAction(() => {
+        this.resData = res.data;
+        this.pending = false;
+      });
     } catch (error) {
-      this.resData = {};
+      runInAction(() => {
+        this.resData = {};
+      });
     }
   };
 
