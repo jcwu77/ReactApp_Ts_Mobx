@@ -7,7 +7,7 @@ class DemoStore {
   @observable resData: ResponseData = {};
   @observable pending: boolean = true;
 
-  @computed get total() {
+  @computed get total(): number {
     return 112 * this.count;
   }
 

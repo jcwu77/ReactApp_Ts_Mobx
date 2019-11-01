@@ -5,13 +5,15 @@ module.exports = {
   },
   extends: [
     "react-app",
-    "plugin:prettier/recommended",
+    "plugin:@typescript-eslint/recommended",
     "plugin:import/warnings",
+    "plugin:prettier/recommended",
   ],
   globals: {
     Atomics: "readonly",
     SharedArrayBuffer: "readonly",
   },
+  parser: "@typescript-eslint/parser",
   parserOptions: {
     ecmaFeatures: {
       jsx: true,
@@ -19,9 +21,10 @@ module.exports = {
     ecmaVersion: 2018,
     sourceType: "module",
   },
-  plugins: ["react", "prettier", "import"],
+  plugins: ["react", "prettier", "import", "@typescript-eslint"],
   rules: {
     "prettier/prettier": "error",
+    "@typescript-eslint/indent": [2, 2],
     // import顺序
     "import/order": "warn",
     // 禁止出现console，除warn，error
@@ -128,5 +131,15 @@ module.exports = {
     "no-undefined": "error",
     "no-unused-vars": "warn",
     "no-use-before-define": "error",
+    "@typescript-eslint/camelcase": "off",
+    "@typescript-eslint/no-explicit-any": "off",
+    "@typescript-eslint/explicit-member-accessibility": "off",
+    "@typescript-eslint/explicit-function-return-type": "off",
+    "@typescript-eslint/no-non-null-assertion": "off",
+  },
+  settings: {
+    react: {
+      version: "detect", // Tells eslint-plugin-react to automatically detect the version of React to use
+    },
   },
 };

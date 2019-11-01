@@ -21,7 +21,7 @@ server.defaults.baseURL = baseUrl;
 
 // 添加请求拦截器
 server.interceptors.request.use(
-  config => {
+  (config: any): any => {
     // 在发送请求之前做些什么
     return config;
   },

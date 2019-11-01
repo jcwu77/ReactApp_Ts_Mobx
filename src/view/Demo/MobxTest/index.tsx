@@ -19,6 +19,8 @@ class MobxTest extends React.Component<PageProps, {}> {
   render() {
     const { DemoStore } = this.props;
     const { total, count } = DemoStore;
+    console.log(count);
+    console.log(total);
     return (
       <div className={styles.container}>
         <span onClick={this.handleAdd}>增加</span>

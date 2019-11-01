@@ -1,3 +1,4 @@
-// export interface Props {
-//   handleClick(): void
-// }
+import { MouseEvent } from "react";
+export interface ComponentProps {
+  handleClick(event: MouseEvent<HTMLDivElement>): void;
+}
