@@ -1,5 +1,5 @@
+const { pageTemplate } = require("../template/page.js");
 const fs = require("fs");
-const { pageTemplate } = require("../template/page");
 const filename = process.argv.splice(2)[0] || "Page";
 
 // 驼峰转下划线

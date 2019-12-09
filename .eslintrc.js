@@ -24,7 +24,6 @@ module.exports = {
   plugins: ["react", "prettier", "import", "@typescript-eslint"],
   rules: {
     "prettier/prettier": "error",
-    "@typescript-eslint/indent": [2, 2],
     // import顺序
     "import/order": "warn",
     // 禁止出现console，除warn，error
@@ -131,6 +130,7 @@ module.exports = {
     "no-undefined": "error",
     "no-unused-vars": "warn",
     "no-use-before-define": "error",
+    "@typescript-eslint/indent": [2, 2],
     "@typescript-eslint/camelcase": "off",
     "@typescript-eslint/no-explicit-any": "off",
     "@typescript-eslint/explicit-member-accessibility": "off",

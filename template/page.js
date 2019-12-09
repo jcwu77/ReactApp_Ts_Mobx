@@ -1,12 +1,4 @@
-/*
- * @LastEditors: wjc
- * @Description: In User Settings Edit
- * @Author: wjc
- * @Date: 2019-08-05 14:11:18
- * @LastEditTime: 2019-08-05 17:16:53
- */
-
-const pageTemplate = name => {
+function pageTemplate(name) {
   const text = name.replace(name[0], name[0].toUpperCase());
   const templateStr = `
   import React from "react";
@@ -34,7 +26,7 @@ const pageTemplate = name => {
   export default ${text};
   `;
   return templateStr;
-};
+}
 
 module.exports = {
   pageTemplate,
