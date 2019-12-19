@@ -1,4 +1,4 @@
-import axios, { AxiosRequestConfig } from "axios";
+import axios, { AxiosRequestConfig, AxiosResponse, AxiosError } from "axios";
 import qs from "qs";
 
 const token: string = `Bearer ${localStorage.getItem("token")}` || "";
@@ -21,7 +21,7 @@ server.defaults.baseURL = baseUrl;
 
 // 添加请求拦截器
 server.interceptors.request.use(
-  (config: any): any => {
+  (config: AxiosRequestConfig) => {
     // 在发送请求之前做些什么
     return config;
   },
@@ -33,30 +33,66 @@ server.interceptors.request.use(
 
 // 添加响应拦截器
 server.interceptors.response.use(
-  response => {
+  (response: AxiosResponse) => {
     // 对响应数据做点什么
-    switch (response.data.code) {
-      case "OK":
-        return response.data;
-      case "Unauthorized":
-        // 未登录操作
-        console.error(response.data.message);
+    switch (response.status) {
+      case 200:
         break;
-      case "ServiceError":
-        console.error(response.data.message);
-        return response.data;
+      case 401:
+        // 未登录操作
+        console.error(response.statusText);
+        break;
+      case 500:
+        console.error(response.statusText);
+        break;
       default:
-        return response.data;
+        break;
     }
+    return response;
   },
-  error => {
+  (error: AxiosError) => {
     // 对响应错误做点什么
     return Promise.reject(error);
   }
 );
 
+// contentType为json时的请求
+const axios_json = <T,>(params: AxiosRequestConfig) => {
+  let options: AxiosRequestConfig = {
+    method: params.method || "get",
+    url: params.url,
+    headers: {
+      Authorization: token,
+    },
+  };
+  if (params.method === "get") {
+    if (params.data) {
+      options.params = params.data;
+    }
+  }
+
+  return server(options).then(
+    (response): ResponseData<T> => {
+      switch (response.data.code) {
+        case "OK":
+          break;
+        case "Unauthorized":
+          // 未登录操作
+          console.error(response.data.message);
+          break;
+        case "ServiceError":
+          console.error(response.data.message);
+          break;
+        default:
+          break;
+      }
+      return response.data;
+    }
+  );
+};
+
 // contentType为form-data时的请求
-const axios_form = (params: AxiosRequestConfig) => {
+const axios_form = <T,>(params: AxiosRequestConfig) => {
   let options: AxiosRequestConfig = {
     method: params.method || "get",
     url: params.url,
@@ -80,25 +116,24 @@ const axios_form = (params: AxiosRequestConfig) => {
       break;
   }
 
-  return server(options);
-};
-
-// contentType为json时的请求
-const axios_json = (params: AxiosRequestConfig) => {
-  let options: AxiosRequestConfig = {
-    method: params.method || "get",
-    url: params.url,
-    headers: {
-      Authorization: token,
-    },
-  };
-  if (params.method === "get") {
-    if (params.data) {
-      options.params = params.data;
+  return server(options).then(
+    (response): ResponseData<T> => {
+      switch (response.data.code) {
+        case "OK":
+          break;
+        case "Unauthorized":
+          // 未登录操作
+          console.error(response.data.message);
+          break;
+        case "ServiceError":
+          console.error(response.data.message);
+          break;
+        default:
+          break;
+      }
+      return response.data;
     }
-  }
-
-  return server(options);
+  );
 };
 
 export { axios_form, axios_json };

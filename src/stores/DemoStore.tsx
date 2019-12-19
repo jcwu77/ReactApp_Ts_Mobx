@@ -1,10 +1,15 @@
 import { observable, action, reaction, computed, runInAction } from "mobx";
+import { UserInfo } from "../view/Demo/index.interface";
 import { testApi } from "../api/demo";
 
 class DemoStore {
   @observable count: number = 0;
   @observable token: string = "";
-  @observable resData: ResponseData = {};
+  @observable resData: UserInfo = {
+    address: "",
+    gender: "",
+    nickName: "",
+  };
   @observable pending: boolean = true;
 
   @computed get total(): number {
@@ -26,16 +31,12 @@ class DemoStore {
 
   @action getUserInfo = async () => {
     try {
-      const res: ResponseData = await testApi(); // 用 yield 代替 await
+      const res = await testApi(); // 用 yield 代替 await
       runInAction(() => {
         this.resData = res.data;
         this.pending = false;
       });
-    } catch (error) {
-      runInAction(() => {
-        this.resData = {};
-      });
-    }
+    } catch (error) {}
   };
 
   @action addCount = () => {

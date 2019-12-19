@@ -1,4 +1,4 @@
-import React from "react";
+import React, { ChangeEvent } from "react";
 import { Switch, Route, Link } from "react-router-dom";
 import { observer, inject } from "mobx-react/custom";
 import { State } from "./index.interface";
@@ -17,16 +17,21 @@ class Demo extends React.Component<PageProps, State> {
       name: "1",
       age: 12,
       value: "",
+      userInfo: {
+        address: "",
+        gender: "",
+        nickName: "",
+      },
     };
   }
 
-  handleClick = (): void => {
+  handleClick = () => {
     this.setState({
       name: "换名字了",
     });
   };
 
-  handleLogin = (): void => {
+  handleLogin = () => {
     const { DemoStore } = this.props;
     DemoStore.setToken(
       "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxNTk2NzU4MTE2MSIsImNyZWF0ZWQiOjE1NzI0MTU0NDgyMjIsImV4cCI6MTU3MzAyMDI0OH0.jvjUnmxOf5OVBgaBHWAE02pvOTIJPGnaZfg54crwqddMiugugB8CiO7qehdHVZPuuxTutpL6wX6TOw6KgBVcXA"
@@ -34,7 +39,7 @@ class Demo extends React.Component<PageProps, State> {
     DemoStore.getUserInfo();
   };
 
-  handleChange = (e: any): void => {
+  handleChange = (e: ChangeEvent<HTMLInputElement>): void => {
     console.log(e);
   };
 
