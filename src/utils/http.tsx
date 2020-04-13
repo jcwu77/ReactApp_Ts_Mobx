@@ -1,7 +1,7 @@
 import axios, { AxiosRequestConfig, AxiosResponse, AxiosError } from "axios";
+import { Toast } from "antd-mobile";
 import qs from "qs";
 
-const token: string = `Bearer ${localStorage.getItem("token")}` || "";
 const server = axios.create();
 // 根据环境获取不同的baseUrl
 const origin: string = window.location.origin;
@@ -57,7 +57,8 @@ server.interceptors.response.use(
 );
 
 // contentType为json时的请求
-const axios_json = <T,>(params: AxiosRequestConfig) => {
+const axios_json = (params: AxiosRequestConfig) => {
+  const token: string = `Bearer ${localStorage.getItem("token")}` || "";
   let options: AxiosRequestConfig = {
     method: params.method || "get",
     url: params.url,
@@ -65,25 +66,37 @@ const axios_json = <T,>(params: AxiosRequestConfig) => {
       Authorization: token,
     },
   };
-  if (params.method === "get") {
-    if (params.data) {
-      options.params = params.data;
+  if (params.data) {
+    switch (params.method) {
+      case "get":
+        options.params = params.data;
+        break;
+      case "post":
+        options.data = qs.stringify(params.data);
+        break;
+      default:
+        options.params = params.data;
+        break;
     }
   }
 
   return server(options).then(
-    (response): ResponseData<T> => {
+    (response): ResponseData => {
       switch (response.data.code) {
         case "OK":
           break;
         case "Unauthorized":
           // 未登录操作
+          Toast.info("请登录", 2);
           console.error(response.data.message);
           break;
         case "ServiceError":
-          console.error(response.data.message);
+          break;
+        case "DuplicateSubmit":
+          Toast.info(response.data.message, 2);
           break;
         default:
+          options.params = params.data;
           break;
       }
       return response.data;
@@ -92,7 +105,8 @@ const axios_json = <T,>(params: AxiosRequestConfig) => {
 };
 
 // contentType为form-data时的请求
-const axios_form = <T,>(params: AxiosRequestConfig) => {
+const axios_form = (params: AxiosRequestConfig) => {
+  const token: string = `Bearer ${localStorage.getItem("token")}` || "";
   let options: AxiosRequestConfig = {
     method: params.method || "get",
     url: params.url,
@@ -101,23 +115,22 @@ const axios_form = <T,>(params: AxiosRequestConfig) => {
       Authorization: token,
     },
   };
-  switch (params.method) {
-    case "get":
-      if (params.data) {
+  if (params.data) {
+    switch (params.method) {
+      case "get":
         options.params = params.data;
-      }
-      break;
-    case "post":
-      if (params.data) {
+        break;
+      case "post":
         options.data = qs.stringify(params.data);
-      }
-      break;
-    default:
-      break;
+        break;
+      default:
+        options.params = params.data;
+        break;
+    }
   }
 
   return server(options).then(
-    (response): ResponseData<T> => {
+    (response): ResponseData => {
       switch (response.data.code) {
         case "OK":
           break;
@@ -126,7 +139,9 @@ const axios_form = <T,>(params: AxiosRequestConfig) => {
           console.error(response.data.message);
           break;
         case "ServiceError":
-          console.error(response.data.message);
+          break;
+        case "DuplicateSubmit":
+          Toast.info(response.data.message, 2);
           break;
         default:
           break;

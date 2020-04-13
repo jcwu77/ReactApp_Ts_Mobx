@@ -32,10 +32,16 @@ class DemoStore {
   @action getUserInfo = async () => {
     try {
       const res = await testApi(); // 用 yield 代替 await
-      runInAction(() => {
-        this.resData = res.data;
-        this.pending = false;
-      });
+      if (res.code === "OK") {
+        runInAction(() => {
+          this.resData = {
+            address: res.data.address,
+            gender: res.data.gender,
+            nickName: res.data.nickName,
+          };
+          this.pending = false;
+        });
+      }
     } catch (error) {}
   };
 

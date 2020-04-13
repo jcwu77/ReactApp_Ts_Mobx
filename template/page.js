@@ -3,10 +3,12 @@ function pageTemplate(name) {
   const templateStr = `
   import React from "react";
   import styles from "./index.module.less";
+  import { State } from "./index.interface";
+
   
-  class ${text} extends React.Component {
-    constructor() {
-      super();
+  class ${text} extends React.Component<PageProps, State> {
+    constructor(props: PageProps) {
+      super(props);
       this.state = {
       };
     }

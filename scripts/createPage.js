@@ -2,8 +2,14 @@ const { pageTemplate } = require("../template/page.js");
 const fs = require("fs");
 const filename = process.argv.splice(2)[0] || "Page";
 
+// 首字母大写
+const firstWordUp = name => {
+  return name[0].toUpperCase() + name.substr(1);
+};
+
 // 驼峰转下划线
 const toLine = name => {
+  name = name[0].toUpperCase() + name.substr(1);
   return name
     .replace(/([A-Z])/g, "_$1")
     .toLowerCase()
@@ -23,21 +29,36 @@ fs.readdir("src/view", (err, file) => {
 
   if (!isExist) {
     // 创建目录
-    fs.mkdir(`src/view/${filename}`, err => {
+    fs.mkdir(`src/view/${firstWordUp(filename)}`, err => {
       if (err) {
         console.log(`创建失败, ${err}`);
       }
       // 创建less文件
-      fs.writeFile(`src/view/${filename}/index.module.less`, "", err => {
-        if (err) {
-          console.log(`创建失败, ${err}`);
-        }
-      });
-
-      // 创建index.js文件
       fs.writeFile(
-        `src/view/${filename}/index.tsx`,
-        pageTemplate(filename),
+        `src/view/${firstWordUp(filename)}/index.module.less`,
+        "",
+        err => {
+          if (err) {
+            console.log(`创建失败, ${err}`);
+          }
+        }
+      );
+
+      // 创建interface文件
+      fs.writeFile(
+        `src/view/${firstWordUp(filename)}/index.interface.ts`,
+        "export interface State { }",
+        err => {
+          if (err) {
+            console.log(`创建失败, ${err}`);
+          }
+        }
+      );
+
+      // 创建index.tsx文件
+      fs.writeFile(
+        `src/view/${firstWordUp(filename)}/index.tsx`,
+        pageTemplate(firstWordUp(filename)),
         err => {
           if (err) {
             console.log(err);
@@ -55,9 +76,13 @@ fs.readdir("src/view", (err, file) => {
       } else {
         let newData = data.split("</Switch>");
         newData[0] =
-          `import ${filename} from "./${filename}";\n` +
+          `import ${firstWordUp(filename)} from "./${firstWordUp(
+            filename
+          )}";\n` +
           newData[0] +
-          `<Route path="/${toLine(filename)}" component={${filename}} />\n`;
+          `<Route path="/${toLine(filename)}" component={${firstWordUp(
+            filename
+          )}} />\n`;
 
         // console.log(newData);
         fs.writeFile("src/view/Routes.tsx", newData.join("</Switch>"), err => {

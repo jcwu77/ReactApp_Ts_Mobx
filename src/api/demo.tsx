@@ -1,8 +1,7 @@
 import { axios_json } from "../utils/http";
-import { UserInfo } from "../view/Demo/index.interface";
 
 export const testApi = () => {
-  return axios_json<UserInfo>({
+  return axios_json({
     url: "/api/user/getUserById",
   });
 };
