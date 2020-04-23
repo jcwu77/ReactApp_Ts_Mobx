@@ -6,8 +6,9 @@ import ChildThree from "./ChildThree";
 import ChildOne from "./ChildOne";
 import ChildTwo from "./ChildTwo";
 import MobxTest from "./MobxTest";
-
 import styles from "./index.module.less";
+import DemoComponent from "@/components/DemoComponent";
+
 @inject("DemoStore")
 @observer
 class Demo extends React.Component<PageProps, State> {
@@ -53,6 +54,7 @@ class Demo extends React.Component<PageProps, State> {
         <div className={styles.nameButton} onClick={this.handleLogin}>
           点我登录
         </div>
+        <DemoComponent handleClick={() => {}} countDown={100} />
         <h1>mobile: {resData.mobile || "请登录"}</h1>
         <ul>
           <div className={styles.title}>子路由测试</div>

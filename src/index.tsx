@@ -1,6 +1,8 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom";
-import "babel-polyfill";
+// import "babel-polyfill"; //已弃用
+import "core-js";
+import "regenerator-runtime/runtime";
 import "./assets/css/index.less";
 import "antd-mobile/dist/antd-mobile.css";
 import App from "./App";
