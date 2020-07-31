@@ -1,12 +1,14 @@
-import React from "react";
+import React, { Suspense, lazy } from "react";
 import { Switch, Route } from "react-router-dom";
-import Demo from "./Demo";
+const Demo = lazy(() => import("./Demo"));
 
 const Routes = () => {
   return (
-    <Switch>
-      <Route path="/demo" component={Demo} />
-    </Switch>
+    <Suspense fallback={<div></div>}>
+      <Switch>
+        <Route path="/demo" component={Demo} />
+      </Switch>
+    </Suspense>
   );
 };
 

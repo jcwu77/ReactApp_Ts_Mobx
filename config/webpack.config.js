@@ -8,6 +8,10 @@ const HtmlWebpackPlugin = require("html-webpack-plugin");
 const CaseSensitivePathsPlugin = require("case-sensitive-paths-webpack-plugin");
 const InlineChunkHtmlPlugin = require("react-dev-utils/InlineChunkHtmlPlugin");
 const TerserPlugin = require("terser-webpack-plugin");
+const SpeedMeasurePlugin = require("speed-measure-webpack-plugin");
+const UglifyJsPlugin = require("uglifyjs-webpack-plugin");
+// const BundleAnalyzerPlugin = require("webpack-bundle-analyzer")
+//   .BundleAnalyzerPlugin;
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
 const safePostCssParser = require("postcss-safe-parser");
@@ -26,7 +30,7 @@ const typescriptFormatter = require("react-dev-utils/typescriptFormatter");
 const eslint = require("eslint");
 
 const postcssNormalize = require("postcss-normalize");
-
+const smp = new SpeedMeasurePlugin();
 const appPackageJson = require(paths.appPackageJson);
 
 // Source maps are resource heavy and can cause out of memory issue for large source files.
@@ -131,7 +135,7 @@ module.exports = function(webpackEnv) {
     return loaders;
   };
 
-  return {
+  return smp.wrap({
     mode: isEnvProduction ? "production" : isEnvDevelopment && "development",
     // Stop compilation early in production
     bail: isEnvProduction,
@@ -319,21 +323,23 @@ module.exports = function(webpackEnv) {
 
         // First, run the linter.
         // It's important to do this before Babel processes the JS.
-        {
-          test: /\.(js|mjs|jsx|ts|tsx)$/,
-          enforce: "pre",
-          use: [
-            {
-              options: {
-                formatter: require.resolve("react-dev-utils/eslintFormatter"),
-                eslintPath: require.resolve("eslint"),
-                resolvePluginsRelativeTo: __dirname,
-              },
-              loader: require.resolve("eslint-loader"),
-            },
-          ],
-          include: paths.appSrc,
-        },
+        // {
+        //   test: /\.(js|mjs|jsx|ts|tsx)$/,
+        //   enforce: "pre",
+        //   use: [
+        //     // "thread-loader",
+        //     // "babel-loader",
+        //     {
+        //       options: {
+        //         formatter: require.resolve("react-dev-utils/eslintFormatter"),
+        //         eslintPath: require.resolve("eslint"),
+        //         resolvePluginsRelativeTo: __dirname,
+        //       },
+        //       loader: require.resolve("eslint-loader"),
+        //     },
+        //   ],
+        //   include: paths.appSrc,
+        // },
         {
           // "oneOf" will traverse all following loaders until one will
           // match the requirements. When no loader matches it will fall
@@ -355,32 +361,48 @@ module.exports = function(webpackEnv) {
             {
               test: /\.(js|mjs|jsx|ts|tsx)$/,
               include: paths.appSrc,
-              loader: require.resolve("babel-loader"),
-              options: {
-                customize: require.resolve(
-                  "babel-preset-react-app/webpack-overrides"
-                ),
+              use: [
+                "thread-loader",
+                // "babel-loader",
+                {
+                  options: {
+                    customize: require.resolve(
+                      "babel-preset-react-app/webpack-overrides"
+                    ),
 
-                plugins: [
-                  [
-                    require.resolve("babel-plugin-named-asset-import"),
-                    {
-                      loaderMap: {
-                        svg: {
-                          ReactComponent:
-                            "@svgr/webpack?-svgo,+titleProp,+ref![path]",
+                    plugins: [
+                      [
+                        require.resolve("babel-plugin-named-asset-import"),
+                        {
+                          loaderMap: {
+                            svg: {
+                              ReactComponent:
+                                "@svgr/webpack?-svgo,+titleProp,+ref![path]",
+                            },
+                          },
                         },
-                      },
-                    },
-                  ],
-                ],
-                // This is a feature of `babel-loader` for webpack (not Babel itself).
-                // It enables caching results in ./node_modules/.cache/babel-loader/
-                // directory for faster rebuilds.
-                cacheDirectory: true,
-                cacheCompression: isEnvProduction,
-                compact: isEnvProduction,
-              },
+                      ],
+                    ],
+                    // This is a feature of `babel-loader` for webpack (not Babel itself).
+                    // It enables caching results in ./node_modules/.cache/babel-loader/
+                    // directory for faster rebuilds.
+                    cacheDirectory: true,
+                    cacheCompression: isEnvProduction,
+                    compact: isEnvProduction,
+                  },
+                  loader: require.resolve("babel-loader"),
+                },
+                {
+                  options: {
+                    formatter: require.resolve(
+                      "react-dev-utils/eslintFormatter"
+                    ),
+                    eslintPath: require.resolve("eslint"),
+                    resolvePluginsRelativeTo: __dirname,
+                  },
+                  loader: require.resolve("eslint-loader"),
+                },
+              ],
             },
             // Process any JS outside of the app with Babel.
             // Unlike the application JS, we only compile the standard ES features.
@@ -630,6 +652,8 @@ module.exports = function(webpackEnv) {
           // The formatter is invoked directly in WebpackDevServerUtils during development
           formatter: isEnvProduction ? typescriptFormatter : undefined,
         }),
+      // new BundleAnalyzerPlugin(),
+      isEnvProduction && new UglifyJsPlugin(),
     ].filter(Boolean),
     // Some libraries import Node modules but don't use them in the browser.
     // Tell Webpack to provide empty mocks for them so importing them works.
@@ -646,5 +670,12 @@ module.exports = function(webpackEnv) {
     // Turn off performance processing because we utilize
     // our own hints via the FileSizeReporter
     performance: false,
-  };
+    // externals: {
+    //   react: "React",
+    //   "react-dom": "ReactDOM",
+    //   mobx: "mobx",
+    //   "mobx-react": "mobx-react",
+    //   "babel-polyfill": "window",
+    // },
+  });
 };
