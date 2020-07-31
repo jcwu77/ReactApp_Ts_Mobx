@@ -30,7 +30,7 @@ const typescriptFormatter = require("react-dev-utils/typescriptFormatter");
 const eslint = require("eslint");
 
 const postcssNormalize = require("postcss-normalize");
-const smp = new SpeedMeasurePlugin();
+// const smp = new SpeedMeasurePlugin();
 const appPackageJson = require(paths.appPackageJson);
 
 // Source maps are resource heavy and can cause out of memory issue for large source files.
@@ -135,7 +135,7 @@ module.exports = function(webpackEnv) {
     return loaders;
   };
 
-  return smp.wrap({
+  return {
     mode: isEnvProduction ? "production" : isEnvDevelopment && "development",
     // Stop compilation early in production
     bail: isEnvProduction,
@@ -677,5 +677,5 @@ module.exports = function(webpackEnv) {
     //   "mobx-react": "mobx-react",
     //   "babel-polyfill": "window",
     // },
-  });
+  };
 };
