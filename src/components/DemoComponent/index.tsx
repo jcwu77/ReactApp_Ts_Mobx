@@ -1,13 +1,13 @@
-import React, { SFC, useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { withRouter, RouteComponentProps } from "react-router";
 import { ComponentProps } from "./index.interface";
 import styles from "./index.module.less";
 
-const DemoCommonComponent: SFC<ComponentProps & RouteComponentProps> = ({
+const DemoCommonComponent = ({
   handleClick = () => {},
   countDown = 0,
   history,
-}) => {
+}: ComponentProps & RouteComponentProps) => {
   const [count, setCount] = useState(0);
 
   let timer: any = useRef();
