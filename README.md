@@ -1,68 +1,36 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# 简介
 
-## Available Scripts
+## 项目介绍
 
-In the project directory, you can run:
+本项目为基于 create-react-app，在此基础上进行搭建的移动端 ts 框架。ui 框架默认使用 antd-mobile，状态管理使用 mobx。
 
-### `npm start`
+## 项目启动步骤
 
-Runs the app in the development mode.<br>
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+1. 安装相应依赖 npm install;
+2. 创建页面级组件 npm run page `组件名`，注意，组件名请使用驼峰命名规范；
+3. 项目运行 npm start;
+4. 项目打包 npm run build;
 
-The page will reload if you make edits.<br>
-You will also see any lint errors in the console.
+## 目录结构
 
-### `npm test`
+1. view ---- 页面级组件
+2. component ---- 公用组件，推荐使用函数式组件。
+3. api ---- 接口定义，创建文件请于页面级组件同名，使用驼峰命名
+4. assets ---- 图片，css，全局定义相关
+5. stores ---- mobx store
+6. utils ---- 工具函数
+7. template ---- 模板文件
 
-Launches the test runner in the interactive watch mode.<br>
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## 使用步骤
 
-### `npm run build`
+1. 执行 npm run page 页面名 命令创建相应的页面级组件，如手动创建请自行添加路由
+2. 在 api 文件夹下创建与之对应的接口文件
+3. 在 store 文件夹下创建与之对应的 store 文件，如不使用 mobx 可不创建
+4. 编写代码
 
-Builds the app for production to the `build` folder.<br>
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## 注意点
 
-The build is minified and the filenames include the hashes.<br>
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (Webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
-
-### Analyzing the Bundle Size
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
-
-### Making a Progressive Web App
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
-
-### Advanced Configuration
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
-
-### Deployment
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
-
-### `npm run build` fails to minify
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+1. 此项目默认对请求做过相应的分装，详情可查看 utils 文件夹下的 http.tsx 文件
+2. 使用 npm run page 创建的页面级组件无需在 Routes.tsx 文件中定义相应路由，会自动生成
+3. 路由已采用懒加载的方式，如需关闭，可修改 Routes.tsx 文件
+4. 此项目已对 webpack 打包后的文件进行过相应的优化
