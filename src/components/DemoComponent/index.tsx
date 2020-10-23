@@ -1,16 +1,16 @@
 import React, { useState, useEffect, useRef } from "react";
-import { withRouter, RouteComponentProps } from "react-router";
+import { useHistory } from "react-router-dom";
 import { ComponentProps } from "./index.interface";
 import styles from "./index.module.less";
 
 const DemoCommonComponent = ({
   handleClick = () => {},
   countDown = 0,
-  history,
-}: ComponentProps & RouteComponentProps) => {
+}: ComponentProps) => {
   const [count, setCount] = useState(0);
-
+  let history = useHistory();
   let timer: any = useRef();
+
   useEffect(() => {
     timer.current = setInterval(() => {
       let newCount = count - 1;
@@ -47,4 +47,4 @@ const DemoCommonComponent = ({
   );
 };
 
-export default withRouter(DemoCommonComponent);
+export default DemoCommonComponent;

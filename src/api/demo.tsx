@@ -5,3 +5,9 @@ export const testApi = () => {
     url: "/api/user/getUserById",
   });
 };
+export const taskList = (data: { pageIndex: number; pageSize: number }) => {
+  return axios_json({
+    url: "/ysf-activity/api/task/list",
+    data,
+  });
+};

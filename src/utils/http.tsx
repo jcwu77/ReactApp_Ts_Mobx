@@ -6,6 +6,7 @@ const server = axios.create();
 // 根据环境获取不同的baseUrl
 const origin: string = window.location.origin;
 let baseUrl: string = origin;
+let requestNum = 0;
 if (origin.indexOf("localhost") > -1) {
   // baseUrl = origin;
 } else if (origin.indexOf("xxxx") > -1) {
@@ -23,6 +24,12 @@ server.defaults.baseURL = baseUrl;
 server.interceptors.request.use(
   (config: AxiosRequestConfig) => {
     // 在发送请求之前做些什么
+    if (config.headers.isLoading) {
+      if (requestNum === 0) {
+        Toast.loading("", 0);
+      }
+      requestNum += 1;
+    }
     return config;
   },
   error => {
@@ -34,6 +41,10 @@ server.interceptors.request.use(
 // 添加响应拦截器
 server.interceptors.response.use(
   (response: AxiosResponse) => {
+    requestNum -= 1;
+    if (requestNum <= 0) {
+      Toast.hide();
+    }
     // 对响应数据做点什么
     switch (response.status) {
       case 200:
@@ -57,13 +68,15 @@ server.interceptors.response.use(
 );
 
 // contentType为json时的请求
-const axios_json = (params: AxiosRequestConfig) => {
+const axios_json = (params: AxiosRequestConfig, isLoading = true) => {
+  // Toast.loading();
   const token: string = `Bearer ${localStorage.getItem("token")}` || "";
   let options: AxiosRequestConfig = {
     method: params.method || "get",
     url: params.url,
     headers: {
       Authorization: token,
+      isLoading,
     },
   };
   if (params.data) {
@@ -87,7 +100,7 @@ const axios_json = (params: AxiosRequestConfig) => {
           break;
         case "Unauthorized":
           // 未登录操作
-          Toast.info("请登录", 2);
+          // Toast.info("请登录", 2);
           console.error(response.data.message);
           break;
         case "ServiceError":
@@ -104,51 +117,4 @@ const axios_json = (params: AxiosRequestConfig) => {
   );
 };
 
-// contentType为form-data时的请求
-const axios_form = (params: AxiosRequestConfig) => {
-  const token: string = `Bearer ${localStorage.getItem("token")}` || "";
-  let options: AxiosRequestConfig = {
-    method: params.method || "get",
-    url: params.url,
-    headers: {
-      "Content-Type": "application/x-www-form-urlencoded",
-      Authorization: token,
-    },
-  };
-  if (params.data) {
-    switch (params.method) {
-      case "get":
-        options.params = params.data;
-        break;
-      case "post":
-        options.data = qs.stringify(params.data);
-        break;
-      default:
-        options.params = params.data;
-        break;
-    }
-  }
-
-  return server(options).then(
-    (response): ResponseData => {
-      switch (response.data.code) {
-        case "OK":
-          break;
-        case "Unauthorized":
-          // 未登录操作
-          console.error(response.data.message);
-          break;
-        case "ServiceError":
-          break;
-        case "DuplicateSubmit":
-          Toast.info(response.data.message, 2);
-          break;
-        default:
-          break;
-      }
-      return response.data;
-    }
-  );
-};
-
-export { axios_form, axios_json };
+export { axios_json };

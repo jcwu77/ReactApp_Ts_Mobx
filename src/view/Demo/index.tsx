@@ -8,8 +8,9 @@ import ChildTwo from "./ChildTwo";
 import MobxTest from "./MobxTest";
 import styles from "./index.module.less";
 import DemoComponent from "@/components/DemoComponent";
+import { taskList } from "@/api/demo";
 
-@inject("DemoStore")
+@inject("DemoStore", "CommonStore")
 @observer
 class Demo extends React.Component<PageProps, State> {
   constructor(props: PageProps) {
@@ -24,6 +25,13 @@ class Demo extends React.Component<PageProps, State> {
         nickName: "",
       },
     };
+  }
+
+  componentDidMount() {
+    taskList({
+      pageIndex: 1,
+      pageSize: 20,
+    });
   }
 
   handleClick = () => {

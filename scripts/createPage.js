@@ -76,9 +76,9 @@ fs.readdir("src/view", (err, file) => {
       } else {
         let newData = data.split("</Switch>");
         newData[0] =
-          `import ${firstWordUp(filename)} from "./${firstWordUp(
+          `const ${firstWordUp(filename)} = lazy(() => import("./${firstWordUp(
             filename
-          )}";\n` +
+          )}"));\n` +
           newData[0] +
           `<Route path="/${toLine(filename)}" component={${firstWordUp(
             filename
