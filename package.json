@@ -153,7 +153,7 @@
     "@typescript-eslint/eslint-plugin": "^1.13.0",
     "@typescript-eslint/parser": "^1.13.0",
     "antd-mobile": "^2.3.1",
-    "axios": "^0.19.0",
+    "axios": "^0.21.1",
     "babel-plugin-import": "^1.12.1",
     "babel-polyfill": "^6.26.0",
     "eslint-config-prettier": "^6.4.0",
