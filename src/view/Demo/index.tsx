@@ -1,14 +1,17 @@
 import React, { ChangeEvent } from "react";
 import { Switch, Route, Link } from "react-router-dom";
 import { observer, inject } from "mobx-react/custom";
+import { DndProvider } from "react-dnd";
+import { HTML5Backend } from "react-dnd-html5-backend";
 import { State } from "./index.interface";
 import ChildThree from "./ChildThree";
 import ChildOne from "./ChildOne";
 import ChildTwo from "./ChildTwo";
 import MobxTest from "./MobxTest";
+import DragItem from "../../components/DragItem";
 import styles from "./index.module.less";
 import DemoComponent from "@/components/DemoComponent";
-import { taskList } from "@/api/demo";
+// import { taskList } from "@/api/demo";
 
 @inject("DemoStore", "CommonStore")
 @observer
@@ -24,14 +27,36 @@ class Demo extends React.Component<PageProps, State> {
         gender: "",
         nickName: "",
       },
+      dragList: [
+        {
+          id: 1,
+          name: "drag1",
+        },
+        {
+          id: 2,
+          name: "drag2",
+        },
+        {
+          id: 3,
+          name: "drag3",
+        },
+        {
+          id: 4,
+          name: "drag4",
+        },
+        {
+          id: 5,
+          name: "drag5",
+        },
+      ],
     };
   }
 
   componentDidMount() {
-    taskList({
-      pageIndex: 1,
-      pageSize: 20,
-    });
+    // taskList({
+    //   pageIndex: 1,
+    //   pageSize: 20,
+    // });
   }
 
   handleClick = () => {
@@ -52,16 +77,46 @@ class Demo extends React.Component<PageProps, State> {
     console.log(e);
   };
 
+  // 拖拽改变位置
+  changePosition = (originName: string, newIndex: number) => {
+    console.log(newIndex);
+
+    const { dragList } = this.state;
+    const newList: any = [...dragList];
+    let dragItemIndex = 0;
+    newList.forEach((item: any, index: number) => {
+      if (item.name === originName) {
+        dragItemIndex = index;
+      }
+    });
+    const deleteContent = newList.splice(dragItemIndex, 1);
+    newList.splice(newIndex, 0, deleteContent[0]);
+    this.setState({
+      dragList: newList,
+    });
+  };
+
   render() {
     const { DemoStore } = this.props;
     const { resData } = DemoStore;
-    const { name, value } = this.state;
+    const { name, value, dragList } = this.state;
     return (
       // !pending && (
       <>
-        <div className={styles.nameButton} onClick={this.handleLogin}>
+        <DndProvider backend={HTML5Backend}>
+          {dragList.map((item: any, index: number) => (
+            <DragItem
+              key={item.id}
+              name={item.name}
+              index={index}
+              move={this.changePosition}
+            />
+          ))}
+        </DndProvider>
+
+        {/* <div className={styles.nameButton} onClick={this.handleLogin}>
           点我登录
-        </div>
+        </div> */}
         <DemoComponent handleClick={() => {}} countDown={100} />
         <h1>mobile: {resData.mobile || "请登录"}</h1>
         <ul>

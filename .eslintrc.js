@@ -59,7 +59,7 @@ module.exports = {
     //禁止扩展原生类型
     "no-extend-native": "error",
     //禁止不必要的标签
-    "no-extra-label": "error",
+    "no-extra-label": "warn",
     //switch
     "no-fallthrough": "error",
     // 禁止数字前或后添加小数点
@@ -105,8 +105,8 @@ module.exports = {
     "no-self-compare": "error",
     "no-sequences": "error",
     //禁止未使用过的表达式
-    "no-unused-expressions": "error",
-    "no-useless-concat": "error",
+    "no-unused-expressions": "warn",
+    "no-useless-concat": "warn",
     //void
     "no-void": "error",
     //禁用 with 语句
@@ -129,7 +129,7 @@ module.exports = {
     "no-undef": "error",
     "no-undefined": "error",
     "no-unused-vars": "warn",
-    "no-use-before-define": "error",
+    "no-use-before-define": "warn",
     "@typescript-eslint/indent": [2, 2],
     "@typescript-eslint/camelcase": "off",
     "@typescript-eslint/no-explicit-any": "off",
