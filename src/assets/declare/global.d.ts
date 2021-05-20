@@ -13,3 +13,6 @@ declare interface ResponseData<T = any> {
   path?: string;
   timestamp?: string;
 }
+
+declare module "nbugs-pc-downloadfile";
+declare module "nbugs-images-upload";

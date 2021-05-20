@@ -1,14 +1,8 @@
 import React, { ChangeEvent } from "react";
-import { Switch, Route, Link } from "react-router-dom";
 import { observer, inject } from "mobx-react/custom";
 import { State } from "./index.interface";
-import ChildThree from "./ChildThree";
-import ChildOne from "./ChildOne";
-import ChildTwo from "./ChildTwo";
-import MobxTest from "./MobxTest";
-import styles from "./index.module.less";
-import DemoComponent from "@/components/DemoComponent";
-import { taskList } from "@/api/demo";
+import Download from "nbugs-pc-downloadfile";
+import ImagesUpload from "nbugs-images-upload";
 
 @inject("DemoStore", "CommonStore")
 @observer
@@ -24,70 +18,54 @@ class Demo extends React.Component<PageProps, State> {
         gender: "",
         nickName: "",
       },
+      startDownload: false,
     };
   }
 
-  componentDidMount() {
-    taskList({
-      pageIndex: 1,
-      pageSize: 20,
-    });
-  }
+  componentDidMount() {}
 
   handleClick = () => {
     this.setState({
-      name: "换名字了",
+      startDownload: true,
     });
   };
 
-  handleLogin = () => {
-    const { DemoStore } = this.props;
-    DemoStore.setToken(
-      "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxNTk2NzU4MTE2MSIsImNyZWF0ZWQiOjE1NzI0MTU0NDgyMjIsImV4cCI6MTU3MzAyMDI0OH0.jvjUnmxOf5OVBgaBHWAE02pvOTIJPGnaZfg54crwqddMiugugB8CiO7qehdHVZPuuxTutpL6wX6TOw6KgBVcXA"
-    );
-    DemoStore.getUserInfo();
+  isFinish = (data: any) => {
+    console.log(data);
   };
+
+  handleLogin = () => {};
 
   handleChange = (e: ChangeEvent<HTMLInputElement>): void => {
     console.log(e);
   };
 
+  callback = () => {
+    console.log(111);
+  };
+
   render() {
-    const { DemoStore } = this.props;
-    const { resData } = DemoStore;
-    const { name, value } = this.state;
+    const { startDownload } = this.state;
     return (
       // !pending && (
       <>
-        <div className={styles.nameButton} onClick={this.handleLogin}>
-          点我登录
-        </div>
-        <DemoComponent handleClick={() => {}} countDown={100} />
-        <h1>mobile: {resData.mobile || "请登录"}</h1>
-        <ul>
-          <div className={styles.title}>子路由测试</div>
-          <Link to="/demo/child_one">跳转子路由1</Link>
-          <Link to="/demo/child_two">跳转子路由2</Link>
-          <Link to="/demo/child_three">跳转子路由3</Link>
-        </ul>
-        <Switch>
-          <Route path="/demo/child_one" component={ChildOne} />
-          <Route path="/demo/child_two" component={ChildTwo} />
-          <Route path="/demo/child_three" component={ChildThree} />
-        </Switch>
-
-        <ul>
-          <div className={styles.title}>mobx测试</div>
-          <Link to="/demo/mobx">mobx</Link>
-        </ul>
-        <Switch>
-          <Route path="/demo/mobx" component={MobxTest} />
-        </Switch>
-        <span>我的名字是：{name}</span>
-        <div className={styles.nameButton} onClick={this.handleClick}>
-          点我换名字
-        </div>
-        <input value={value} onChange={this.handleChange} />
+        <span onClick={this.handleClick}>开始下载</span>
+        <Download
+          className="customer-class-name"
+          groupIds={[
+            "7ea5bb5adaaa4111be7eceda5d2c36bb",
+            "61aeadf7a3074ed6bb9b59d4e401e525",
+          ]}
+          startDownload={startDownload}
+          zipName="压缩包"
+          isFinish={this.isFinish}
+        />
+        <ImagesUpload
+          edit={0}
+          type="pc"
+          callback={this.callback}
+          groupId="9dc8a86fac5d4e68ac905daf06a3f2c4"
+        />
       </>
     );
     // );

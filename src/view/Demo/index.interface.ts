@@ -3,6 +3,7 @@ export interface State {
   age: number;
   value: string;
   userInfo: UserInfo;
+  startDownload: boolean;
 }
 
 export interface UserInfo {
